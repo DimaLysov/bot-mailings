@@ -36,6 +36,7 @@ class Sample(Base):
     them = Column(String)
     text = Column(Text, default=None)
     photo = Column(Text, default=None)
+    status = Column(Boolean, default=False)
 
 
 async def async_main():

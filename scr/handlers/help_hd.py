@@ -11,5 +11,7 @@ async def cmd_help(m: Message):
                         '/start\n'
                         '/set_email\n'
                         '/set_sample\n'
-                        '/get_sample')
+                        '/get_sample\n'
+                        '/select_email\n'
+                        '/get_email')
 

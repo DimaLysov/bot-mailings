@@ -48,7 +48,6 @@ class SMail:
         except Exception as _ex:
             return f"Error: {_ex}\n"
 
-
 # def send_emails(emails):
 #     for i in range(len(emails)):
 #         email = SMail(login, list_emails[i], them, password)
