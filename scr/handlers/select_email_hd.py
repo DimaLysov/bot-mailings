@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from db.requests.Users.get_user_id_db import get_user_id
 from db.requests.Users_Emails.get_all_emails_db import get_emails
-from db.requests.Users_Emails.update_status_db import update_status
+from db.requests.Users_Emails.update_status_email_db import update_status_email
 from keyboards.select_email_kb import kb_select_email
 
 select_email_router = Router()
@@ -28,6 +28,6 @@ async def accept_email(m: Message, state: FSMContext):
 
 @select_email_router.message(FormSelectEmail.email)
 async def cmd_select_email(m: Message, state: FSMContext):
-    await update_status(await get_user_id(m.from_user.id), m.text)
+    await update_status_email(await get_user_id(m.from_user.id), m.text)
     await m.answer(text='Вы успешно сменили почту!', reply_markup=ReplyKeyboardRemove())
     await state.clear()

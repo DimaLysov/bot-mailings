@@ -8,10 +8,10 @@ help_router = Router()
 @help_router.message(Command('help'))
 async def cmd_help(m: Message):
     await m.answer(text='Вот список команд, которые могут пригодиться:\n'
-                        '/start\n'
-                        '/set_email\n'
-                        '/set_sample\n'
-                        '/get_sample\n'
-                        '/select_email\n'
-                        '/get_email')
+                        '/set_email - добавить почту\n'
+                        '/set_sample - добавить шаблон\n'
+                        '/get_sample - показать выбранный шаблон\n'
+                        '/get_email - показать выбранную почту\n'
+                        '/select_email - выбрать почту (если вы ввели несколько)\n'
+                        '/select_sample - выбрать шаблон (если вы создали несколько)')
 

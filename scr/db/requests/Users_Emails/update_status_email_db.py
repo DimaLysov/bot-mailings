@@ -4,7 +4,7 @@ from db.models import async_session
 from db.models import UserEmails
 
 
-async def update_status(user_id: int, email: str):
+async def update_status_email(user_id: int, email: str):
     async with async_session() as session:
         now_user_email = await session.scalar(select(UserEmails).filter(and_(
             UserEmails.user_id == user_id,
@@ -17,5 +17,6 @@ async def update_status(user_id: int, email: str):
             UserEmails.user_id == user_id,
             UserEmails.email == email
         )))
-        new_user_email.status = True
-        await session.commit()
+        if new_user_email:
+            new_user_email.status = True
+            await session.commit()

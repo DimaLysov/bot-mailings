@@ -3,7 +3,7 @@ from sqlalchemy import select, and_
 from db.models import async_session
 from db.models import UserEmails
 from db.requests.Users.get_user_id_db import get_user_id
-from db.requests.Users_Emails.update_status_db import update_status
+from db.requests.Users_Emails.update_status_email_db import update_status_email
 
 
 async def add_email(email: str, password: str, chat_id: int):
@@ -20,6 +20,6 @@ async def add_email(email: str, password: str, chat_id: int):
                 UserEmails.email == email,
                 UserEmails.password == password
             )))
-            await update_status(user_email.user_id, user_email.email)
+            await update_status_email(user_email.user_id, user_email.email)
             return True
         return False
