@@ -11,5 +11,5 @@ async def get_all_themes(chat_id):
         user_themes = await session.scalars(select(Sample).where(Sample.user_id == user_id))
         if not user_themes:
             return None
-        themes = [user_them.them for user_them in user_themes]
+        themes = [user_them.theme for user_them in user_themes]
         return themes

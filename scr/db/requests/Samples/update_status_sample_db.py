@@ -5,7 +5,7 @@ from db.models import Sample
 from db.requests.Users.get_user_id_db import get_user_id
 
 
-async def update_status_sample(chat_id: int, them: str):
+async def update_status_sample(chat_id: int, theme: str):
     user_id = await get_user_id(chat_id)
     async with async_session() as session:
         now_active_sample = await session.scalar(select(Sample).filter(and_(
@@ -17,7 +17,7 @@ async def update_status_sample(chat_id: int, them: str):
             await session.commit()
         new_active_sample = await session.scalar(select(Sample).filter(and_(
             Sample.user_id == user_id,
-            Sample.them == them
+            Sample.theme == theme
         )))
         if new_active_sample:
             new_active_sample.status = True

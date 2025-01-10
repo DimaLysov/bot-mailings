@@ -17,7 +17,7 @@ async def cmd_get_sample(m: Message):
     if sample is not None:
         photo_path = os.path.join(PHOTO_SAVE_PATH, sample.photo)
         await m.answer(text=f'Тема письма:\n\n'
-                            f'{sample.them}\n\n'
+                            f'{sample.theme}\n\n'
                             f'Текс письма\n\n'
                             f'{sample.text}\n\n')
         await m.answer(text='Фотографии письма:')

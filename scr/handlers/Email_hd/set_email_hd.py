@@ -4,8 +4,8 @@ from aiogram.types import Message
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
-from check_email import is_valid_email
-from check_password import is_valid_password
+from utils.check_email import is_valid_email
+from utils.check_password import is_valid_password
 from db.requests.Users_Emails.add_email_db import add_email
 
 add_email_router = Router()

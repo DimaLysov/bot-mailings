@@ -14,20 +14,20 @@ add_sample_router = Router()
 
 
 class FormSample(StatesGroup):
-    them = State()
+    theme = State()
     text = State()
     photo = State()
 
 
 @add_sample_router.message(Command('set_sample'))
 async def accept_them(m: Message, state: FSMContext):
-    await state.set_state(FormSample.them)
+    await state.set_state(FormSample.theme)
     await m.answer(text='Введите тему для вашего письма')
 
 
-@add_sample_router.message(FormSample.them)
+@add_sample_router.message(FormSample.theme)
 async def accept_text(m: Message, state: FSMContext):
-    await state.update_data(them=m.text)
+    await state.update_data(theme=m.text)
     await state.set_state(FormSample.text)
     await m.answer(text='Введите текс который будет в письме')
 
@@ -48,9 +48,9 @@ async def set_sample(m: Message, state: FSMContext):
     await bot.download_file(photo.file_path, os.path.join(PHOTO_SAVE_PATH, photo_name))
 
     date = await state.get_data()
-    them = date.get('them')
+    theme = date.get('theme')
     text = date.get('text')
-    answer = await add_sample(m.from_user.id, them, text, photo_name)
+    answer = await add_sample(m.from_user.id, theme, text, photo_name)
     if answer:
         await m.answer(text='Вы успешно сохранили шаблон письма')
     else:
