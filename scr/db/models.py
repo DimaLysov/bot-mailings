@@ -34,8 +34,8 @@ class Sample(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('Users.id'))
     theme = Column(String)
-    text = Column(Text, default=None)
-    photo = Column(Text, default=None)
+    text_name = Column(Text, default=None)
+    photo_name = Column(Text, default=None)
     status = Column(Boolean, default=False)
 
 

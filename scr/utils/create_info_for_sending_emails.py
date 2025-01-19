@@ -11,8 +11,8 @@ async def create_info(chat_id, emails) -> SMail:
     info = SMail(sending_mail=sending_mail,
                  password=password,
                  theme=sample.theme,
-                 text=sample.text,
-                 name_photo=sample.photo,
+                 text_name=sample.text_name,
+                 name_photo=sample.photo_name,
                  list_emails=emails)
     return info
 
