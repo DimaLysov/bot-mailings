@@ -1,15 +1,16 @@
 import os
 import time
 
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 from config import PHOTO_SAVE_PATH, TEXT_SAVE_PATH
 from create_bot import bot
 from db.requests.Samples.add_sample_db import add_sample
+from keyboards.InLine_kb.main_inline_kb import main_start_inline_kb
 
 add_sample_router = Router()
 
@@ -20,10 +21,11 @@ class FormSample(StatesGroup):
     photo = State()
 
 
-@add_sample_router.message(Command('set_sample'))
-async def accept_them(m: Message, state: FSMContext):
+@add_sample_router.callback_query(F.data == 'new_sample_call')
+async def call_new_sample(call: CallbackQuery, state: FSMContext):
+    await bot.delete_message(call.from_user.id, call.message.message_id)
     await state.set_state(FormSample.theme)
-    await m.answer(text='Введите тему для вашего письма')
+    await call.message.answer(text='Введите тему для вашего письма')
 
 
 @add_sample_router.message(FormSample.theme)
@@ -63,3 +65,4 @@ async def set_sample(m: Message, state: FSMContext):
     else:
         await m.answer(text='Что-то пошло не так...')
     await state.clear()
+    await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())

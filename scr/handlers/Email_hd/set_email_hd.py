@@ -1,9 +1,11 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
+from create_bot import bot
+from keyboards.InLine_kb.main_inline_kb import main_start_inline_kb
 from utils.check_email import is_valid_email
 from utils.check_password import is_valid_password
 from db.requests.Users_Emails.add_email_db import add_email
@@ -16,10 +18,11 @@ class FormEditConn(StatesGroup):
     user_email_pass = State()
 
 
-@add_email_router.message(Command('set_email'))
-async def accept_email(m: Message, state: FSMContext):
-    await m.answer('Введите название почты, с которой вы хотите отправлять письма\n\n'
-                   'Пример: ivanivanov@mail.ru')
+@add_email_router.callback_query(F.data == 'new_email_call')
+async def call_set_email(call: CallbackQuery, state: FSMContext):
+    await bot.delete_message(call.from_user.id, call.message.message_id)
+    await call.message.answer('Введите название почты, с которой вы хотите отправлять письма\n\n'
+                              'Пример: ivanivanov@mail.ru')
     await state.set_state(FormEditConn.user_email)
 
 
@@ -55,3 +58,4 @@ async def cmd_get_email(m: Message, state: FSMContext):
     else:
         await m.answer(text='Вы ввели некорректный пароль, попробуйте еще раз')
         await state.set_state(FormEditConn.user_email_pass)
+    await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())

@@ -16,6 +16,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     chat_id = Column(BigInteger, unique=True)
+    user_name = Column(String)
 
 
 class UserEmails(Base):
