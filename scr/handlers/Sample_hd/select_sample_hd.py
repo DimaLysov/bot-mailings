@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from db.requests.Samples.get_all_themes_db import get_all_themes
 from db.requests.Samples.update_status_sample_db import update_status_sample
-from keyboards.select_sample_kb import kb_select_sample
+from keyboards.Line_kb.select_sample_kb import kb_select_sample
 
 select_sample_router = Router()
 
