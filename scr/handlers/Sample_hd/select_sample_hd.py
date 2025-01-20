@@ -22,8 +22,10 @@ async def call_select_sample(call: CallbackQuery, state: FSMContext):
     await bot.delete_message(call.from_user.id, call.message.message_id)
     await state.set_state(FormSelectSample.sample)
     themes_samples = await get_all_themes(call.from_user.id)
-    if themes_samples is None:
+    if not themes_samples:
         await call.message.answer(text='У вас нет ни одного шаблона')
+        await state.clear()
+        await call.message.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
     else:
         await call.message.answer(text='Выберете тему шаблона, который хотите выбрать',
                                   reply_markup=kb_select_sample(themes_samples))
@@ -31,7 +33,10 @@ async def call_select_sample(call: CallbackQuery, state: FSMContext):
 
 @select_sample_router.message(FormSelectSample.sample)
 async def cmd_select_sample(m: Message, state: FSMContext):
-    await update_status_sample(m.from_user.id, m.text)
-    await m.answer(text='Вы успешно сменили тему', reply_markup=ReplyKeyboardRemove())
+    answer = await update_status_sample(m.from_user.id, m.text)
+    if answer:
+        await m.answer(text='Вы успешно сменили тему', reply_markup=ReplyKeyboardRemove())
+    else:
+        await m.answer(text='У вас нет такого шаблона', reply_markup=ReplyKeyboardRemove())
     await state.clear()
     await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())

@@ -28,5 +28,5 @@ async def call_view_sample(call: CallbackQuery):
         await call.message.answer(text='Фотографии письма:')
         await bot.send_photo(chat_id=call.message.chat.id, photo=FSInputFile(path=photo_path))
     else:
-        await call.message.answer(text='Такого шаблона нет')
+        await call.message.answer(text='У вас нет ни одного шаблона')
     await call.message.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
