@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+
 def main_start_inline_kb():
     inline_kb_list = [
         [InlineKeyboardButton(text='Мои почты📤', callback_data='main_email'),
@@ -9,12 +10,14 @@ def main_start_inline_kb():
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
+
 def main_email_inline_kb():
     inline_kb_list = [
         [InlineKeyboardButton(text='Новая почту', callback_data='new_email_call'),
+         InlineKeyboardButton(text='Выбрать почту', callback_data='select_email_call')],
+        [InlineKeyboardButton(text='Изменить данные', callback_data='edit_email_data'),
          InlineKeyboardButton(text='Выбранная почту', callback_data='view_email_call')],
-        [InlineKeyboardButton(text='Выбрать почту', callback_data='select_email_call'),
-         InlineKeyboardButton(text='В главное меню⬅️', callback_data='back_main')]
+         [InlineKeyboardButton(text='В главное меню⬅️', callback_data='back_main')]
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 

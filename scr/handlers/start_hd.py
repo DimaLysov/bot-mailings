@@ -32,15 +32,15 @@ async def write_main_email(call: CallbackQuery):
 
 
 @start_router.callback_query(F.data == 'main_sample')
-async def write_main_email(call: CallbackQuery):
+async def write_main_sample(call: CallbackQuery):
     await call.message.edit_reply_markup(str(call.message.message_id), reply_markup=main_sample_inline_kb())
 
 @start_router.callback_query(F.data == 'back_main')
-async def write_main_email(call: CallbackQuery):
+async def write_main_kb(call: CallbackQuery):
     await call.message.edit_reply_markup(str(call.message.message_id), reply_markup=main_start_inline_kb())
 
 @start_router.callback_query(F.data == 'main_setting')
-async def write_main_email(call: CallbackQuery):
+async def write_main_setting(call: CallbackQuery):
     await bot.delete_message(call.from_user.id, call.message.message_id)
     await call.message.answer(text='Полная инструкция')
     await call.message.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
