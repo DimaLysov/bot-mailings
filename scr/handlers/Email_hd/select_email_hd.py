@@ -10,7 +10,7 @@ from db.requests.Users_Emails.get_all_emails_db import get_emails
 from db.requests.Users_Emails.update_status_email_db import update_status_email
 from keyboards.InLine_kb.main_inline_kb import main_start_inline_kb
 from keyboards.Line_kb.select_email_kb import kb_select_email
-from utils.check_email import is_valid_email
+from utils.check_data import is_valid_email
 
 select_email_router = Router()
 

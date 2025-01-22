@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 import io
 from config import PHOTO_SAVE_PATH, TEXT_SAVE_PATH
-from utils.check_email import is_valid_email
+from utils.check_data import is_valid_email
 
 
 def photo_file_handler(file_name):
