@@ -29,12 +29,12 @@ def text_file_handler(file_name):
 
 
 class SMail:
-    def __init__(self, sending_mail, password, theme, text_name, name_photo, list_emails):
+    def __init__(self, sending_mail, password, theme, text_name, list_photo_names, list_emails):
         self.sending_mail = sending_mail
         self.__p = password
         self.theme = theme
         self.text_name = text_name
-        self.name_photo = name_photo
+        self.list_photo_names = list_photo_names
         self.list_emails = list_emails
 
     def send_email(self):
@@ -51,10 +51,11 @@ class SMail:
                     msg['From'] = self.sending_mail
                     text_path = os.path.join(TEXT_SAVE_PATH, self.text_name)
                     msg.text = text_file_handler(text_path)
-                    photo_path = os.path.join(PHOTO_SAVE_PATH, self.name_photo)
-                    msg.image = photo_file_handler(photo_path)
                     msg.attach(msg.text)
-                    msg.attach(msg.image)
+                    for name_photo in self.list_photo_names:
+                        photo_path = os.path.join(PHOTO_SAVE_PATH, name_photo)
+                        msg.image = photo_file_handler(photo_path)
+                        msg.attach(msg.image)
                     server.sendmail(self.sending_mail, email_receive, msg.as_string())
                     print(f"Message sent to email {email_receive}")
                 else:

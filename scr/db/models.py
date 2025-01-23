@@ -36,8 +36,15 @@ class Sample(Base):
     user_id = Column(Integer, ForeignKey('Users.id'))
     theme = Column(String)
     text_name = Column(Text, default=None)
-    photo_name = Column(Text, default=None)
     status = Column(Boolean, default=False)
+
+
+class Photo(Base):
+    __tablename__ = 'Photos'
+
+    id = Column(Integer, primary_key=True)
+    sample_id: Column[int] = Column(Integer, ForeignKey('Samples.id'))
+    name_photo = Column(Text, default=None)
 
 
 async def async_main():
