@@ -27,6 +27,7 @@ def main_sample_inline_kb():
         [InlineKeyboardButton(text='Новый шаблон', callback_data='new_sample_call'),
          InlineKeyboardButton(text='Выбранный шаблон', callback_data='view_sample_call')],
         [InlineKeyboardButton(text='Выбрать шаблон', callback_data='select_sample_call'),
-         InlineKeyboardButton(text='В главное меню ⬅️', callback_data='back_main')]
+         InlineKeyboardButton(text='Изменить шаблон', callback_data='edit_sample_data')],
+        [InlineKeyboardButton(text='В главное меню ⬅️', callback_data='back_main')]
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)

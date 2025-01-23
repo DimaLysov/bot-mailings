@@ -3,7 +3,7 @@ from sqlalchemy import select, and_
 from db.models import async_session
 from db.models import Photo, Sample
 
-async def add_new_photo(name_sample: str, name_photo):
+async def add_new_photo(name_sample: str, name_photo: str):
     async with async_session() as session:
         sample = await session.scalar(select(Sample).filter(name_sample == Sample.theme))
         if sample:
