@@ -5,6 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+from sqlalchemy.util import await_only
 
 from config import TEXT_SAVE_PATH, PHOTO_SAVE_PATH
 from create_bot import bot
@@ -27,7 +28,6 @@ class FormEditSample(StatesGroup):
     edit_theme = State()
     edit_text = State()
     count_photo = State()
-    count_add_photo = State()
     edit_photo = State()
 
 
@@ -35,9 +35,13 @@ class FormEditSample(StatesGroup):
 async def call_edit_sample(call: CallbackQuery, state: FSMContext):
     await bot.delete_message(call.from_user.id, call.message.message_id)
     themes = await get_all_themes(call.from_user.id)
-    await call.message.answer(text='Выберете, шаблон, который хотите изменить\n\n'
-                                   'Для выхода из режима /empty', reply_markup=kb_select_sample(themes))
-    await state.set_state(FormEditSample.main_sample)
+    if not themes:
+        await call.message.answer(text='У вас нет ни одного шаблона')
+        await call.message.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
+    else:
+        await call.message.answer(text='Выберете, шаблон, который хотите изменить\n\n'
+                                       'Для выхода из режима /empty', reply_markup=kb_select_sample(themes))
+        await state.set_state(FormEditSample.main_sample)
 
 
 @edit_sample_router.message(FormEditSample.main_sample)
@@ -106,9 +110,12 @@ async def accept_count_photo(m: Message, state: FSMContext):
         if m.text.isdigit():
             count = int(m.text)
             if count != 0:
-                await state.update_data(count_photo=count, count_add_photo=0)
-                await m.answer(text='Чтобы бот успешно сохранял фотографии, присылайте их по одной')
+                await state.update_data(count_photo=count)
+                await m.answer(text='Для лучшей работы бота, не группируйте фотографии')
                 await state.set_state(FormEditSample.edit_photo)
+            else:
+                await state.clear()
+                await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
         else:
             await m.answer(text='Вы ввели некорректное число, попробуйте еще раз')
             await state.set_state(FormEditSample.count_photo)
@@ -122,7 +129,6 @@ async def accept_count_photo(m: Message, state: FSMContext):
 async def accept_photos(m: Message, state: FSMContext):
     date = await state.get_data()
     all_count = date.get('count_photo')
-    count = date.get('count_add_photo')
     # Сохраняем фотографию
     photo_id = m.photo[-1].file_id
     photo = await bot.get_file(photo_id)
@@ -135,9 +141,8 @@ async def accept_photos(m: Message, state: FSMContext):
         await m.answer(text='Фотография сохранена')
     else:
         await m.answer(text='Произошла ошибка')
-    count += 1
-    if all_count > count:
-        await state.update_data(count_add_photo=count + 1)
+    count_photo = len(await get_all_photos(main_sample))
+    if all_count > count_photo:
         await state.set_state(FormEditSample.edit_photo)
         return
     await state.clear()

@@ -10,6 +10,7 @@ from aiogram.fsm.context import FSMContext
 from config import PHOTO_SAVE_PATH, TEXT_SAVE_PATH
 from create_bot import bot
 from db.requests.Photos.add_photo_db import add_new_photo
+from db.requests.Photos.get_all_photos_sample_db import get_all_photos
 from db.requests.Samples.add_sample_db import add_sample
 from keyboards.InLine_kb.main_inline_kb import main_start_inline_kb
 
@@ -20,7 +21,6 @@ class FormSample(StatesGroup):
     theme = State()
     text = State()
     count_photos = State()
-    count_add_photo = State()
     photo = State()
 
 
@@ -77,8 +77,8 @@ async def accept_count_photo(m: Message, state: FSMContext):
         if m.text.isdigit():
             count = int(m.text)
             if count != 0:
-                await state.update_data(count_photo=count, count_add_photo=0)
-                await m.answer(text='Чтобы бот успешно сохранял фотографии, присылайте их по одной')
+                await state.update_data(count_photo=count)
+                await m.answer(text='Для лучшей работы бота, не группируйте фотографии')
                 await state.set_state(FormSample.photo)
                 return
         else:
@@ -94,7 +94,6 @@ async def accept_photo(m: Message, state: FSMContext):
     if m.text != '/empty':
         date = await state.get_data()
         all_count = date.get('count_photo')
-        count = date.get('count_add_photo')
         # Сохраняем фотографию
         photo_id = m.photo[-1].file_id
         photo = await bot.get_file(photo_id)
@@ -107,9 +106,8 @@ async def accept_photo(m: Message, state: FSMContext):
             await m.answer(text='Фотография сохранена')
         else:
             await m.answer(text='Произошла ошибка')
-        count += 1
-        if all_count > count:
-            await state.update_data(count_add_photo=count + 1)
+        count_photo = len(await get_all_photos(theme))
+        if all_count > count_photo:
             await state.set_state(FormSample.photo)
             return
     await state.clear()

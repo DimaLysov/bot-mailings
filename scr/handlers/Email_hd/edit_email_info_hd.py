@@ -25,64 +25,56 @@ class FormEdit(StatesGroup):
 async def call_edit(call: CallbackQuery, state: FSMContext):
     await bot.delete_message(call.from_user.id, call.message.message_id)
     emails = await get_emails(call.from_user.id)
-    await state.set_state(FormEdit.main_email)
-    await call.message.answer(text='Выберете почту, у которой хотите изменить данные\n\n'
-                                   'Для выхода из режима - /empty',
-                              reply_markup=kb_select_email(emails))
+    if not emails:
+        await call.message.answer(text='У вас ни одной почты')
+        await state.clear()
+        await call.message.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
+    else:
+        await state.set_state(FormEdit.main_email)
+        await call.message.answer(text='Выберете почту, у которой хотите изменить данные\n\n'
+                                       'Для выхода из режима - /empty',
+                                  reply_markup=kb_select_email(emails))
 
 
 @edit_router.message(FormEdit.main_email)
 async def make_choice(m: Message, state: FSMContext):
-    if m.text != '/empty':
-        if is_valid_data('Почта', m.text):
-            await state.update_data(main_email=m.text)
-            await state.set_state(FormEdit.select)
-            await m.answer(text='Выберете, что хотите изменить', reply_markup=kb_email_password())
-        else:
-            await state.set_state(FormEdit.main_email)
-            await m.answer(text='Вы ввели некорректное название почты, попробуйте еще раз', )
+    if is_valid_data('Почта', m.text):
+        await state.update_data(main_email=m.text)
+        await state.set_state(FormEdit.select)
+        await m.answer(text='Выберете, что хотите изменить', reply_markup=kb_email_password())
     else:
-        await state.clear()
-        await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
+        await state.set_state(FormEdit.main_email)
+        await m.answer(text='Вы ввели некорректное название почты, попробуйте еще раз', )
 
 
 @edit_router.message(FormEdit.select)
 async def accept_select(m: Message, state: FSMContext):
-    if m.text != '/empty':
-        if m.text == 'Почта' or m.text == 'Пароль':
-            await state.update_data(select=m.text)
-            await state.set_state(FormEdit.edit_data)
-            if m.text == 'Почта':
-                await m.answer(text='Введите новую почту', reply_markup=ReplyKeyboardRemove())
-            elif m.text == 'Пароль':
-                await m.answer(text='Введите новый пароль', reply_markup=ReplyKeyboardRemove())
-        else:
-            await state.set_state(FormEdit.select)
-            await m.answer('Извините, но я не знаю что это, попробуйте еще')
+    if m.text == 'Почта' or m.text == 'Пароль':
+        await state.update_data(select=m.text)
+        await state.set_state(FormEdit.edit_data)
+        if m.text == 'Почта':
+            await m.answer(text='Введите новую почту', reply_markup=ReplyKeyboardRemove())
+        elif m.text == 'Пароль':
+            await m.answer(text='Введите новый пароль', reply_markup=ReplyKeyboardRemove())
     else:
-        await state.clear()
-        await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
-
+        await state.set_state(FormEdit.select)
+        await m.answer('Извините, но я не знаю что это, попробуйте еще')
 
 
 @edit_router.message(FormEdit.edit_data)
 async def edit_email_or_password(m: Message, state: FSMContext):
-    if m.text != '/empty':
-        data = await state.get_data()
-        main_email = data.get('main_email')
-        select = data.get('select')
-        new_value = m.text
-        if is_valid_data(select, new_value):
-            answer = await edit_date(m.from_user.id, main_email, new_value, select)
-            if answer:
-                await m.answer(text='Вы успешно изменили данные')
-            else:
-                await m.answer(text='Не удалось изменить данные')
-            await state.clear()
-            await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
+    data = await state.get_data()
+    main_email = data.get('main_email')
+    select = data.get('select')
+    new_value = m.text
+    if is_valid_data(select, new_value):
+        answer = await edit_date(m.from_user.id, main_email, new_value, select)
+        if answer:
+            await m.answer(text='Вы успешно изменили данные')
         else:
-            await state.set_state(FormEdit.edit_data)
-            await m.answer(text='Вы ввели не корректные данные, попробуйте еще раз')
-    else:
+            await m.answer(text='Не удалось изменить данные')
         await state.clear()
         await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
+    else:
+        await state.set_state(FormEdit.edit_data)
+        await m.answer(text='Вы ввели не корректные данные, попробуйте еще раз')

@@ -13,10 +13,10 @@ def main_start_inline_kb():
 
 def main_email_inline_kb():
     inline_kb_list = [
-        [InlineKeyboardButton(text='Новая почту', callback_data='new_email_call'),
-         InlineKeyboardButton(text='Выбрать почту', callback_data='select_email_call')],
-        [InlineKeyboardButton(text='Изменить данные', callback_data='edit_email_data'),
-         InlineKeyboardButton(text='Выбранная почту', callback_data='view_email_call')],
+        [InlineKeyboardButton(text='Новая почту 🆕', callback_data='new_email_call'),
+         InlineKeyboardButton(text='Показать выбранную 👀', callback_data='view_email_call')],
+        [InlineKeyboardButton(text='Выбрать почту 🫵', callback_data='select_email_call'),
+         InlineKeyboardButton(text='Изменить данные ✍️', callback_data='edit_email_data')],
          [InlineKeyboardButton(text='В главное меню ⬅️', callback_data='back_main')]
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
@@ -24,10 +24,10 @@ def main_email_inline_kb():
 
 def main_sample_inline_kb():
     inline_kb_list = [
-        [InlineKeyboardButton(text='Новый шаблон', callback_data='new_sample_call'),
-         InlineKeyboardButton(text='Выбранный шаблон', callback_data='view_sample_call')],
-        [InlineKeyboardButton(text='Выбрать шаблон', callback_data='select_sample_call'),
-         InlineKeyboardButton(text='Изменить шаблон', callback_data='edit_sample_data')],
+        [InlineKeyboardButton(text='Новый шаблон 🆕', callback_data='new_sample_call'),
+         InlineKeyboardButton(text='Показать выбранный 👀', callback_data='view_sample_call')],
+        [InlineKeyboardButton(text='Выбрать шаблон 🫵', callback_data='select_sample_call'),
+         InlineKeyboardButton(text='Изменить шаблон ✍️', callback_data='edit_sample_data')],
         [InlineKeyboardButton(text='В главное меню ⬅️', callback_data='back_main')]
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)

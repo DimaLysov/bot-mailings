@@ -28,39 +28,33 @@ async def call_set_email(call: CallbackQuery, state: FSMContext):
 
 @add_email_router.message(FormEditConn.user_email)
 async def accept_pass(m: Message, state: FSMContext):
-    if m.text == '/empty':
-        await state.clear()
-        await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
+    await state.update_data(user_email=m.text)
+    user_data = await state.get_data()
+    email = user_data.get('user_email')
+    if is_valid_data('Почта', email):
+        await m.answer('Введите пароль для приложений\n\n'
+                       'Пример: yima fekd rylw weux')
+        await state.set_state(FormEditConn.user_email_pass)
     else:
-        await state.update_data(user_email=m.text)
-        user_data = await state.get_data()
-        email = user_data.get('user_email')
-        if is_valid_data('Почта', email):
-            await m.answer('Введите пароль для приложений\n\n'
-                           'Пример: yima fekd rylw weux')
-            await state.set_state(FormEditConn.user_email_pass)
-        else:
-            await m.answer(text='Вы ввели некорректный email, попробуйте еще раз')
-            await state.set_state(FormEditConn.user_email)
+        await m.answer(text='Вы ввели некорректный email, попробуйте еще раз')
+        await state.set_state(FormEditConn.user_email)
 
 
 @add_email_router.message(FormEditConn.user_email_pass)
 async def cmd_get_email(m: Message, state: FSMContext):
-    if m.text == '/empty':
-        await state.clear()
-    else:
-        await state.update_data(user_email_pass=m.text)
-        user_data = await state.get_data()
-        email = user_data.get('user_email')
-        password = user_data.get('user_email_pass')
-        if is_valid_data('Пароль', password):
-            answer = await add_email(email, password, m.from_user.id)
-            if answer:
-                await m.answer(text='Вы успешно ввели данные')
-            else:
-                await m.answer(text='Произошла какая-то ошибка')
-            await state.clear()
+    await state.update_data(user_email_pass=m.text)
+    user_data = await state.get_data()
+    email = user_data.get('user_email')
+    password = user_data.get('user_email_pass')
+    if is_valid_data('Пароль', password):
+        answer = await add_email(email, password, m.from_user.id)
+        if answer:
+            await m.answer(text='Вы успешно ввели данные')
         else:
-            await m.answer(text='Вы ввели некорректный пароль, попробуйте еще раз')
-            await state.set_state(FormEditConn.user_email_pass)
+            await m.answer(text='Произошла какая-то ошибка')
+    else:
+        await m.answer(text='Вы ввели некорректный пароль, попробуйте еще раз')
+        await state.set_state(FormEditConn.user_email_pass)
+        return
+    await state.clear()
     await m.answer(text='Панель навигации', reply_markup=main_start_inline_kb())
