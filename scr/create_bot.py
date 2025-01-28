@@ -2,7 +2,7 @@ from aiogram import Dispatcher, Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
-from scr.config import BOT_API_TOKEN, ADMINS
+from config import BOT_API_TOKEN, ADMINS
 from aiogram.fsm.storage.memory import MemoryStorage
 
 # admins = [int(admin_id) for admin_id in ADMINS.split(',')]

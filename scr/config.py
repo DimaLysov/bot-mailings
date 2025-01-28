@@ -14,5 +14,5 @@ DATABASE_URL = f"postgresql+asyncpg://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB}"
 BOT_API_TOKEN = os.getenv('BOT_API_TOKEN')
 ADMINS = os.getenv('ADMINS')
 # Путь для сохранения файлов
-PHOTO_SAVE_PATH = '../photos'
-TEXT_SAVE_PATH = '../text'
+PHOTO_SAVE_PATH = 'scr/photos'
+TEXT_SAVE_PATH = 'scr/text'
