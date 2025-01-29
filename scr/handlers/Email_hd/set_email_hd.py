@@ -33,7 +33,7 @@ async def accept_pass(m: Message, state: FSMContext):
     email = user_data.get('user_email')
     if is_valid_data('Почта', email):
         await m.answer('Введите пароль для приложений\n\n'
-                       'Пример: yimafekdrylwweux')
+                       'Пример: yimafekdrylwwevx')
         await state.set_state(FormEditConn.user_email_pass)
     else:
         await m.answer(text='Вы ввели некорректный email, попробуйте еще раз')
