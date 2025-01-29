@@ -21,7 +21,7 @@ class FormEditConn(StatesGroup):
 async def call_set_email(call: CallbackQuery, state: FSMContext):
     await bot.delete_message(call.from_user.id, call.message.message_id)
     await call.message.answer('Введите название почты, с которой вы хотите отправлять письма\n\n'
-                              'Пример: ivanivanov@mail.ru\n\n'
+                              'Пример: ivanivanov@yandex.com\n\n'
                               'Для выхода из режима - /empty')
     await state.set_state(FormEditConn.user_email)
 
@@ -33,7 +33,7 @@ async def accept_pass(m: Message, state: FSMContext):
     email = user_data.get('user_email')
     if is_valid_data('Почта', email):
         await m.answer('Введите пароль для приложений\n\n'
-                       'Пример: yima fekd rylw weux')
+                       'Пример: yimafekdrylwweux')
         await state.set_state(FormEditConn.user_email_pass)
     else:
         await m.answer(text='Вы ввели некорректный email, попробуйте еще раз')

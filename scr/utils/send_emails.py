@@ -40,7 +40,7 @@ class SMail:
     def send_email(self):
         try:
             err_emails = []
-            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server = smtplib.SMTP('smtp.yandex.ru', 587)
             server.starttls()
             server.login(self.sending_mail, self.__p)
             for email_receive in self.list_emails:
