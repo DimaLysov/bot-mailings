@@ -40,8 +40,10 @@ class SMail:
     def send_email(self):
         try:
             err_emails = []
-            server = smtplib.SMTP('smtp.yandex.ru', 587)
+            server = smtplib.SMTP('smtp.yandex.ru', 587, timeout=10)
+            print(1)
             server.starttls()
+            print(2)
             server.login(self.sending_mail, self.__p)
             for email_receive in self.list_emails:
                 if is_valid_email(email_receive):
